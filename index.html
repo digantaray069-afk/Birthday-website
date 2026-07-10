@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Diti</title>
+    <style>
+        /* --- General Styling --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            overflow: hidden; 
+            color: #333;
+            background-color: #ffe6ea;
+        }
+
+        h1, h2, h3 {
+            font-family: Arial, sans-serif;
+            letter-spacing: 1px;
+        }
+
+        /* Page Transitions */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        /* Shared Button Style */
+        .btn {
+            padding: 15px 30px;
+            margin-top: 30px;
+            font-family: Arial, sans-serif;
+            font-size: 1.1rem;
+            color: white;
+            background-color: #ff6b81;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.4);
+            transition: transform 0.3s, background-color 0.3s;
+            z-index: 20;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #ff4757;
+        }
+
+        /* --- Page 1: Home --- */
+        #page1 {
+            background: linear-gradient(135deg, #ffe6ea, #ffb3c6);
+        }
+
+        .title {
+            font-size: 3.5rem;
+            color: #d63031;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            z-index: 5;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #d63031;
+            font-style: italic;
+            margin-bottom: 40px;
+            z-index: 5;
+        }
+
+        .scene {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            z-index: 5;
+        }
+
+        .teddy {
+            font-size: 7rem;
+            filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.2));
+        }
+
+        .cake {
+            font-size: 10rem;
+            filter: drop-shadow(0px 15px 15px rgba(0,0,0,0.3));
+            animation: gentleBounce 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes gentleBounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        /* Large balloons via JS */
+        #balloon-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -150px;
+            opacity: 0.9;
+            animation: floatUp 8s infinite ease-in;
+            filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.2));
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
+            10% { opacity: 0.9; }
+            50% { transform: translateY(-55vh) rotate(5deg); }
+            90% { opacity: 0.9; }
+            100% { transform: translateY(-120vh) rotate(-5deg); opacity: 0; }
+        }
+
+        /* --- Page 2: Greeting Card (Book Style) --- */
+        #page2 {
+            background: linear-gradient(135deg, #ffc3a0, #ffafbd);
+        }
+
+        .book-container {
+            perspective: 1500px;
+            width: 320px;
+            height: 480px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .book-cover, .book-inside {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px 20px 20px 10px;
+            box-shadow: 10px 15px 25px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Right side (Inside of the card) */
+        .book-inside {
+            background: #fffdf9;
+            border: 3px dashed #ff9a9e;
+            z-index: 1;
+        }
+
+        .inside-border {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #ffb3c6;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .inside-stickers {
+            position: absolute;
+            font-size: 2rem;
+        }
+        .st-top-left { top: 5px; left: 5px; }
+        .st-bottom-right { bottom: 5px; right: 5px; }
+
+        .card-header {
+            font-size: 2.2rem;
+            color: #d63031; /* Dark pink */
+            margin-bottom: 15px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1.05rem;
+            line-height: 1.4;
+            color: #ff7da1; /* Light pink */
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Front Cover */
+        .book-cover {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            border: 2px solid #fff;
+            border-left: 10px solid #ff7a8a; /* Binding */
+            transform-origin: left center;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            z-index: 2;
+            cursor: pointer;
+            backface-visibility: hidden;
+        }
+
+        .book-container.open .book-cover {
+            transform: rotateY(-140deg);
+        }
+
+        .cover-text {
+            font-size: 2rem;
+            color: #d63031;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        .cover-stickers {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .tap-instruction {
+            font-size: 1.1rem;
+            color: #fff;
+            background: #ff4757;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bounce-arrow {
+            animation: slideBounce 1s infinite alternate;
+        }
+
+        @keyframes slideBounce {
+            from { transform: translateX(0); }
+            to { transform: translateX(10px); }
+        }
+
+        /* --- Page 3: Gallery (Crossfade Setup) --- */
+        #page3 {
+            background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+        }
+
+        #slideshow-container {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1080 / 1920; /* Portrait ratio */
+            max-height: 75vh;
+            background: rgba(255, 255, 255, 0.2);
+            border: 5px solid #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            transition: opacity 1s ease-out; /* For fading out at the end */
+        }
+
+        /* Image styling for smooth crossfading */
+        .slide-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.8s ease-in-out, transform 4s ease-in-out;
+            transform: scale(1);
+        }
+
+        /* Active image smoothly fades in and slightly zooms */
+        .slide-img.active {
+            opacity: 1;
+            transform: scale(1.03); 
+        }
+
+        /* Ending Text Container */
+        #ending-text {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thanks-line {
+            font-size: 3rem;
+            color: #d63031;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .wishes-line {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #ff4757;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .show-ending .thanks-line {
+            animation: popIn 1s forwards ease-out;
+        }
+        .show-ending .wishes-line {
+            animation: slideUpFade 1s 0.5s forwards ease-out;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="page1" class="page active">
+        <div id="balloon-container"></div>
+
+        <h1 class="title">Happy Birthday Diti</h1>
+        <p class="subtitle">wish you a very happy and charming life with lots of happiness</p>
+        
+        <div class="scene">
+            <span class="teddy">🧸</span>
+            <span class="cake">🎂</span>
+            <span class="teddy">🧸</span>
+        </div>
+
+        <button class="btn" onclick="goToPage('page2')">click for celebration</button>
+    </div>
+
+    <div id="page2" class="page">
+        <div class="book-container" id="birthdayBook" onclick="openBook()">
+            <div class="book-inside">
+                <div class="inside-border">
+                    <span class="inside-stickers st-top-left">🌟</span>
+                    <span class="inside-stickers st-bottom-right">🎈</span>
+                    
+                    <h2 class="card-header">DITI</h2>
+                    <p class="card-text">
+                        Dearest Diti, wishing you a birthday as bright and beautiful as your smile! May this year bring you closer to your dreams, fill your days with endless laughter, and surround you with the love you truly deserve. You are incredibly special, and I hope today is absolutely magical! Happy Birthday! ❤️
+                    </p>
+                </div>
+            </div>
+
+            <div class="book-cover">
+                <div class="cover-stickers">🌸🎀🌸</div>
+                <h2 class="cover-text">TO MY<br>FAVORITE PERSON</h2>
+                <div class="cover-stickers">✨🦋✨</div>
+                
+                <div class="tap-instruction">
+                    Open <span class="bounce-arrow">👉</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn" style="display: none;" id="btnPage3" onclick="goToPage('page3')">best of my collection</button>
+    </div>
+
+    <div id="page3" class="page">
+        <div id="slideshow-container">
+            <img class="slide-img" id="slide-img-1" src="" alt="Gallery Image 1">
+            <img class="slide-img" id="slide-img-2" src="" alt="Gallery Image 2">
+        </div>
+
+        <div id="ending-text">
+            <h2 class="thanks-line">thanks for watching</h2>
+            <p class="wishes-line">wishes from megh</p>
+        </div>
+    </div>
+
+    <script>
+        // Generate big balloons dynamically
+        function createBalloons() {
+            const container = document.getElementById('balloon-container');
+            const colors = ['🎈', '💖', '🎈', '🎉', '🎈'];
+            
+            for (let i = 0; i < 20; i++) {
+                let balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.innerText = colors[Math.floor(Math.random() * colors.length)];
+                
+                let size = (Math.random() * 4 + 3) + 'rem'; 
+                balloon.style.fontSize = size;
+                balloon.style.left = Math.random() * 90 + 'vw';
+                balloon.style.animationDelay = Math.random() * 5 + 's';
+                balloon.style.animationDuration = (Math.random() * 4 + 6) + 's'; 
+                
+                container.appendChild(balloon);
+            }
+        }
+        createBalloons();
+
+        // Page transition logic
+        function goToPage(targetPageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(targetPageId).classList.add('active');
+
+            if (targetPageId === 'page3') {
+                startSlideshow();
+            }
+        }
+
+        // Open book 
+        let isBookOpen = false;
+        function openBook() {
+            if (isBookOpen) return;
+            isBookOpen = true;
+
+            const book = document.getElementById('birthdayBook');
+            const nextButton = document.getElementById('btnPage3');
+            
+            book.classList.add('open');
+            
+            // Show next button after animation (poppers removed as requested)
+            setTimeout(() => {
+                nextButton.style.display = 'block';
+                nextButton.style.opacity = '0';
+                setTimeout(() => {
+                    nextButton.style.transition = 'opacity 0.5s';
+                    nextButton.style.opacity = '1';
+                }, 50);
+            }, 1200); 
+        }
+
+        // Crossfade Slideshow Logic
+        const images = [
+            "8bcc83e8-0fef-4562-a018-aa4d1584d0d6.png",
+            "559105382_122220577046093449_2075254286493506461_n.jpg",
+            "609152678_122231789174093449_1063750206817892820_n.jpg",
+            "481098397_122190883694093449_660879133758328854_n.jpg",
+            "645967468_122237505266093449_2004035454158428993_n.jpg",
+            "608899038_122231789900093449_4611843655781444760_n.jpg",
+            "IMG_20260309_213702_982(1).jpg",
+            "photo_2026-02-20_18-47-47.jpg"
+        ];
+        
+        let currentImgIdx = 0;
+        let slideInterval;
+        let isImg1Active = true; 
+
+        function startSlideshow() {
+            const container = document.getElementById('slideshow-container');
+            const endingBox = document.getElementById('ending-text');
+            const img1 = document.getElementById('slide-img-1');
+            const img2 = document.getElementById('slide-img-2');
+            
+            // Load the first image instantly
+            img1.src = images[0];
+            img1.classList.add('active');
+            currentImgIdx = 1;
+            
+            function showNextSlide() {
+                // If we've reached the end of the images
+                if (currentImgIdx >= images.length) {
+                    clearInterval(slideInterval);
+                    
+                    // Fade out the container
+                    container.style.opacity = '0'; 
+                    
+                    // After fading out, hide the container and show the text
+                    setTimeout(() => {
+                        container.style.display = 'none';
+                        endingBox.style.display = 'flex'; 
+                        endingBox.classList.add('show-ending'); 
+                    }, 1000); // 1 second matches the opacity transition duration
+                    
+                    return;
+                }
+
+                // Crossfade Logic: toggle between img1 and img2
+                if (isImg1Active) {
+                    img2.src = images[currentImgIdx];
+                    img2.classList.add('active');
+                    img1.classList.remove('active');
+                } else {
+                    img1.src = images[currentImgIdx];
+                    img1.classList.add('active');
+                    img2.classList.remove('active');
+                }
+                
+                isImg1Active = !isImg1Active;
+                currentImgIdx++;
+            }
+
+            // Fire the slide change every 2 seconds
+            slideInterval = setInterval(showNextSlide, 2000);
+        }
+    </script>
+</body>
+</html>
